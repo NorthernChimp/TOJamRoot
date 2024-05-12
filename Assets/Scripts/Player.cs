@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     public PlayerSettings defaultSettings;
     PlayerSettings currentSettings;
     List<PlayerSettingsAffector> affectors;
+    public static Transform instance;
     float timeSinceJump = 0f;
     bool grounded = false;
     bool atBottom = false;
@@ -59,6 +60,7 @@ public class Player : MonoBehaviour
     }
     public void SetupPlayer()
     {
+        instance = transform;
         affectors = new List<PlayerSettingsAffector>();
         transform.localScale = MainScript.brickScale;
         rbody = GetComponent<Rigidbody2D>();

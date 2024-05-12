@@ -853,7 +853,7 @@ MonoBehaviour:
   - {fileID: 1819553852}
   - {fileID: 943702991}
   audio: {fileID: 537612306}
-  progressBar: {fileID: 0}
+  progressBar: {fileID: 1519453596}
 --- !u!1 &537612304
 GameObject:
   m_ObjectHideFlags: 0

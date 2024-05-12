@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GarbageCan : MonoBehaviour,Actor
 {
+    bool hasBeenCollected = false;
     public List<GameEvent> SetupActor()
     {
         List<GameEvent> temp = new List<GameEvent>();
@@ -13,6 +14,13 @@ public class GarbageCan : MonoBehaviour,Actor
     public List<GameEvent> UpdateActor(float timePassed)
     {
         List<GameEvent> temp = new List<GameEvent>();
+        Vector3 diff = Player.instance.position - transform.position;diff.z = 0f;
+        if(diff.magnitude < MainScript.brickWidth * 2f && !hasBeenCollected)
+        {
+            hasBeenCollected = true;
+            MainScript.instance.ItemCollected();
+            temp.Add(GameEvent.GetRemoveActorEvent(this));
+        }
         if(MainScript.IsPointLeftOfCamera(transform.position + Vector3.right * Screen.width * 0.001f))
         {
             temp.Add(GameEvent.GetRemoveActorEvent(this));
