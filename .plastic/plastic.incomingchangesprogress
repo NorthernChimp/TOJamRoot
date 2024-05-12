@@ -1,0 +1,28 @@
+[
+  {
+    "MountId": "56e62dd7-241f-41e9-8c6b-dd4ca4513e62",
+    "AncestorCsetIds": [
+      2
+    ],
+    "SourceCsetId": 3,
+    "DestinationCsetId": 2,
+    "FileConflicts": [
+      {
+        "Path": "/Assets/Scenes/SampleScene.unity",
+        "ItemId": 163,
+        "ParentItemId": 151,
+        "BaseRevId": 208,
+        "SourceRevId": 226,
+        "DestinationRevId": 208
+      },
+      {
+        "Path": "/Assets/Scripts/MainScript.cs",
+        "ItemId": 178,
+        "ParentItemId": 153,
+        "BaseRevId": 212,
+        "SourceRevId": 229,
+        "DestinationRevId": 212
+      }
+    ]
+  }
+]
