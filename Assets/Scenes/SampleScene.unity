@@ -1053,12 +1053,12 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 023faab13c61004449c960ec5946275f, type: 3}
   - {fileID: 21300000, guid: ee3674bf0c51790419f5903ed22c8f04, type: 3}
   - {fileID: 21300000, guid: 8ecab829d2424f443a5bd1005f3679d5, type: 3}
-  - {fileID: 21300000, guid: 16d5a1089f2e32040baf761de7f7bcf0, type: 3}
+  - {fileID: 21300000, guid: fc7377cae11f49248a1f0858a6a7e9e3, type: 3}
   lookupKey:
   - ground
   - house
   - roof
-  - sky
+  - SKY-L1
 --- !u!4 &753791236
 Transform:
   m_ObjectHideFlags: 0

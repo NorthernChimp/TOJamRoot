@@ -19,7 +19,7 @@ public class Tile : MonoBehaviour
         switch (ty)
         {
             case TileType.ground: render.sortingOrder = (0); break;//ground is default
-            case TileType.skyBackground:s = SpriteLibrary.instance.GetSpriteFromKey("sky");render.sortingOrder = (-5) ;break;
+            case TileType.skyBackground:s = SpriteLibrary.instance.GetSpriteFromKey("SKY-L1");render.sortingOrder = (-5) ;break;
             case TileType.house:s = SpriteLibrary.instance.GetSpriteFromKey("house"); render.sortingOrder = (0); break;
             case TileType.roof:s = SpriteLibrary.instance.GetSpriteFromKey("roof"); render.sortingOrder = (0); break;
         }
