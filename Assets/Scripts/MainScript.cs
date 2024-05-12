@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;  // Required for manipulating UI elements
 
 public class MainScript : MonoBehaviour
 {
@@ -15,6 +16,12 @@ public class MainScript : MonoBehaviour
     List<ColliderScript> colliders;
     public static MainScript instance;
     int currentSegmentXRef = 0;//the segment reference for the last tile pushed to the furthest right in the game
+
+    //UI Related Stuff
+    public Slider progressBar;  // Reference to the progress bar slider
+    private int totalCollectibles = 10;  // Set this to your total number of collectible items
+    private int collectedItems = 0;
+
     void Start()
     {
         SetupGame();
@@ -40,10 +47,6 @@ public class MainScript : MonoBehaviour
             ObjectPool.ReturnObjectToPool(objectsToPurge[0]);
             objectsToPurge.RemoveAt(0);
         }
-    }
-    public void ItemCollected()
-    {
-
     }
     void SetupGame()
     {
@@ -104,6 +107,54 @@ public class MainScript : MonoBehaviour
         }
         player.SetupPlayer();
     }
+
+    /*************************************************************************
+ UI Functions
+ **************************************************************************/
+
+    void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(gameObject);  // Ensures that there are no duplicate instances
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject); // Optional: Only use if you need this instance persisting across scene loads
+        }
+    }
+
+    private void UpdateProgressBar()
+    {
+        if (progressBar != null)
+        {
+            //progressBar.value = (float)collectedItems / totalCollectibles;
+            progressBar.value = collectedItems;
+        }
+    }
+
+
+    /*************************************************************************
+     Item Functions
+     **************************************************************************/
+
+    public void CollectItem()
+    {
+        collectedItems++;
+        UpdateProgressBar();
+    }
+
+    // Add this method to be called when an item is collected
+    public void ItemCollected()
+    {
+        CollectItem();
+    }
+
+    /***************************************************************************
+    Tile/Segment functions
+    ***************************************************************************/
+
     Tile CreateTile(Vector3 pos)
     {
         Transform t = Instantiate(tile, pos, Quaternion.identity).transform;
@@ -111,6 +162,7 @@ public class MainScript : MonoBehaviour
         Tile til = t.GetComponent<Tile>();
         return til;
     }
+
     void CreateNextSegment(Vector3 newOrigin)
     {
         segments.Add(new RunnerSegment().SetupSegment((int)Random.Range(50f, 50f), newOrigin));
@@ -119,6 +171,7 @@ public class MainScript : MonoBehaviour
         segments.RemoveAt(0);
         ProcessGameEvents(segments[0].GetSegmentEvents());
     }
+
     void ProcessGameEvents(List<GameEvent> events)
     {
         while(events.Count > 0)
@@ -133,12 +186,14 @@ public class MainScript : MonoBehaviour
             events.RemoveAt(0);
         }
     }
+
     void RemoveActor(GameEvent e)
     {
         Actor a = e.GetActor();
         actors.Remove(a);
         ObjectPool.ReturnObjectToPool(a.GetTransform().gameObject);
     }
+
     void CreateCollider(GameEvent e)
     {
         string prefabName = "BoxCollider";
@@ -149,6 +204,7 @@ public class MainScript : MonoBehaviour
         c.SetupCollider(e.GetFloat(), e.GetFloat2());
         colliders.Add(c);
     }
+
     void CreateActor(GameEvent e)
     {
         Vector3 pos = e.GetPos();
@@ -160,11 +216,13 @@ public class MainScript : MonoBehaviour
         actors.Add(a);
         ProcessGameEvents(temp);
     }
+
     public static bool IsPointLeftOfCamera(Vector3 v) 
     {
         Vector3 diff = Camera.main.transform.position - v;
         return diff.x > Screen.width * 0.005f;
     }
+
     void CheckIfTilesHavePassedScreenLeft()
     {
         float xPos = tileLayout[0][0].transform.position.x;//only x pos matters so we only need to take one tile's xpos to deteremine if the rest in teh column need to be moved
@@ -173,7 +231,9 @@ public class MainScript : MonoBehaviour
         {
             //TileType typeOfTile = TileType.none;
             if (segments[0].IsPointWithinSegmentWidth(currentSegmentXRef))  //if the current segment x ref is within the current segment then we dont need to do anything
-            { }
+            { 
+            
+            }
             else   //otherwise we must create a new segment. the old segmen isn't needed any more
             {
                 Vector3 newOrigin = tileLayout[0][0].transform.position + Vector3.right * brickWidth * tileLayout[0].Count;
@@ -194,7 +254,10 @@ public class MainScript : MonoBehaviour
             currentSegmentXRef++;
         }
     }
-    float GetTimeFactor() { return 1f; }//in case later we want to mess with teh speed of time
+    float GetTimeFactor() { 
+        return 1f; 
+    }//in case later we want to mess with teh speed of time
+
     void UpdateGame(float timePassed)
     {
         timePassed *= GetTimeFactor();
@@ -209,6 +272,7 @@ public class MainScript : MonoBehaviour
         CheckIfTilesHavePassedScreenLeft();
         UpdateCamera();
     }
+
     void UpdateCamera()
     {
         Vector3 playerPos = player.transform.position;
@@ -216,6 +280,7 @@ public class MainScript : MonoBehaviour
         Vector3 objectivePosition = new Vector3(playerPos.x + Screen.width * 0.0035f, campPos.y, campPos.z);
         transform.position = (campPos + objectivePosition) / 2f;
     }
+
     private void FixedUpdate()
     {
         //transform.Translate(Vector3.right * Time.fixedDeltaTime * 1.75f, Space.World);
@@ -223,6 +288,7 @@ public class MainScript : MonoBehaviour
         
 
     }
+
     // Update is called once per frame
     void Update()
     {
