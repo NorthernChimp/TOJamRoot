@@ -15,10 +15,15 @@ public class Player : MonoBehaviour
     bool grounded = false;
     bool atBottom = false;
     bool holdingSpace = false;
+
+    Animator animator;
+
     void Start()
     {
-        
+        rbody = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();  // Get the Animator component
     }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Vector3 contact = collision.GetContact(0).point;
@@ -27,10 +32,12 @@ public class Player : MonoBehaviour
         {
             transform.position = contact + diff.normalized * MainScript.brickWidth * 1.5f;
             grounded = true;
+            animator.SetBool("IsGrounded", true);
         }
         else
         {
             transform.position = contact + diff.normalized * MainScript.brickWidth * 1.5f;
+            animator.SetBool("IsGrounded", false);
         }
         if(diff.y < 0f)
         {
@@ -96,6 +103,7 @@ public class Player : MonoBehaviour
                     //Debug.Log("grounded is false");
                     grounded = false;
                     timeSinceJump = 3f;
+                    animator.SetBool("IsGrounded", false);
                 }
                 
             }
@@ -107,6 +115,7 @@ public class Player : MonoBehaviour
                     grounded = false;
                     atBottom = false;
                     timeSinceJump = -3f;
+                    animator.SetBool("IsGrounded", false);
                 }
             }
         }
@@ -124,6 +133,7 @@ public class Player : MonoBehaviour
                     Vector3 pos = transform.position;
                     pos.y = hit.point.y + MainScript.brickWidth * 2f;
                     transform.position = pos;
+                    animator.SetBool("IsGrounded", true);
                 }
             }
             if (!grounded)
@@ -144,6 +154,9 @@ public class Player : MonoBehaviour
     void Update()
     {
         holdingSpace = Input.GetKey(KeyCode.Space);
+        animator.SetBool("IsGrounded", grounded);
+        animator.SetBool("IsJumping", holdingSpace && grounded);
+
     }
 }
 public class PlayerSettings
