@@ -83,7 +83,7 @@ public class RunnerSegment
         CreateHouse(houseOrigin, houseWidth, houseHeight);
         if(houseHeight > 4)
         {
-            Vector2Int rightAndAboveOrigin = new Vector2Int(houseOrigin.x - 8, houseOrigin.y + 3);
+            Vector2Int rightAndAboveOrigin = new Vector2Int(houseOrigin.x - 8, houseOrigin.y + 4);
             int widthFree = GetRandomIntBetween(2, 5);
             CreateFreeStandingWall(rightAndAboveOrigin, widthFree);
         }
@@ -100,12 +100,16 @@ public class RunnerSegment
         int randomInt = (int)Random.Range(4f, 12f);     //this random number is the x value of the origin where we're going to make a house
         Vector3 posInFrontOfHouse = origin + Vector3.right * MainScript.brickWidth * randomInt + Vector3.up * MainScript.brickWidth * 2f;
         segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan",posInFrontOfHouse));  //this is the game event that will create a garbage can at that point. Note its added to segment events otherwise the even will not be executed
-        segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan",posInFrontOfHouse));  //this is the game event that will create a garbage can at that point. Note its added to segment events otherwise the even will not be executed
-        segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan",posInFrontOfHouse));  //this is the game event that will create a garbage can at that point. Note its added to segment events otherwise the even will not be executed
-        segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan",posInFrontOfHouse));  //this is the game event that will create a garbage can at that point. Note its added to segment events otherwise the even will not be executed
-        segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan",posInFrontOfHouse));  //this is the game event that will create a garbage can at that point. Note its added to segment events otherwise the even will not be executed
-        segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan",posInFrontOfHouse));  //this is the game event that will create a garbage can at that point. Note its added to segment events otherwise the even will not be executed
-        segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan",posInFrontOfHouse));  //this is the game event that will create a garbage can at that point. Note its added to segment events otherwise the even will not be executed
+        if(Random.value > 0.5f)
+        {
+            segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan", posInFrontOfHouse + Vector3.right * houseWidth * 1f * MainScript.brickWidth));  //this is the game event that will create a garbage can at that point. Note its added to segment events otherwise the even will not be executed
+        }
+        
+        //segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan",posInFrontOfHouse));  //this is the game event that will create a garbage can at that point. Note its added to segment events otherwise the even will not be executed
+        //segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan",posInFrontOfHouse));  //this is the game event that will create a garbage can at that point. Note its added to segment events otherwise the even will not be executed
+        //segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan",posInFrontOfHouse));  //this is the game event that will create a garbage can at that point. Note its added to segment events otherwise the even will not be executed
+        //segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan",posInFrontOfHouse));  //this is the game event that will create a garbage can at that point. Note its added to segment events otherwise the even will not be executed
+        //segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan",posInFrontOfHouse));  //this is the game event that will create a garbage can at that point. Note its added to segment events otherwise the even will not be executed
         return this;
     }
     void CreateFreeStandingWall(Vector2Int leftcoord,int width)

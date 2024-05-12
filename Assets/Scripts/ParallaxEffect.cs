@@ -45,7 +45,7 @@ public class ParallaxEffect : MonoBehaviour
         transform.Translate(actualMovement, Space.World);
         amountTravelled += deltaMovement.x - actualMovement.x;
         lastCameraPosition = cameraTransform.position;
-        if(cameraTransform.position.x - transform.position.x > Screen.width * 0.0065f)
+        if(cameraTransform.position.x - transform.position.x > Screen.width * 0.0025f)
         {
             //Debug.Log("getshere");
             transform.Translate(Vector3.right * width * transform.localScale.x,Space.World);

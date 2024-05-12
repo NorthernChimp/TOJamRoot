@@ -5,13 +5,18 @@ using UnityEngine;
 public class GarbageCan : MonoBehaviour,Actor
 {
     bool hasBeenCollected = false;
+    public Sprite[] possibleSprites;
+    SpriteRenderer render;
     public List<GameEvent> SetupActor()
     {
         List<GameEvent> temp = new List<GameEvent>();
+        render = GetComponent<SpriteRenderer>();
+        render.sprite = possibleSprites[GetRandomIntBetween(0, possibleSprites.Length - 1)];
         hasBeenCollected = false;
-        transform.localScale = MainScript.brickScale;
+        transform.localScale = MainScript.brickScale * 4f;
         return temp;
     }
+    int GetRandomIntBetween(int min, int max) { return (int)(Random.Range((float)min, (float)(max + 1))); }
     public List<GameEvent> UpdateActor(float timePassed)
     {
         List<GameEvent> temp = new List<GameEvent>();

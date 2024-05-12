@@ -11,6 +11,7 @@ Library: D:\vidFolder\New UnityProjects\TOJamRoot\Temp\BurstOutput\tempburstlibs
 --assembly-defines=Assembly-CSharp;
 --assembly-defines=Unity.2D.IK.Runtime;
 --assembly-defines=Unity.Burst;
+--assembly-defines=Unity.Recorder.Base;
 --assembly-defines=Unity.VisualScripting.Core;
 --assembly-defines=Unity.2D.Animation.Runtime;
 --assembly-defines=Unity.2D.Tilemap.Extras;
@@ -23,6 +24,7 @@ Library: D:\vidFolder\New UnityProjects\TOJamRoot\Temp\BurstOutput\tempburstlibs
 --assembly-defines=Unity.2D.PixelPerfect;
 --assembly-defines=Unity.Mathematics;
 --assembly-defines=Unity.TextMeshPro;
+--assembly-defines=Unity.Recorder;
 --assembly-defines=Unity.VisualScripting.State;
 --assembly-defines=Unity.Collections.LowLevel.ILSupport;
 --assembly-defines=Unity.VisualScripting.Antlr3.Runtime;

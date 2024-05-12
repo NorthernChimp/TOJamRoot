@@ -9,6 +9,8 @@ public class MainScript : MonoBehaviour
     public RectTransform handle;
     public DialogBox dialogBox;
     public static float brickWidth;
+    public SpriteRenderer goat;
+    public SpriteRenderer tojam;
     int dialogBoxRef = 0;
     public string[] headerText;
     public SpriteRenderer mainMenu;
@@ -63,6 +65,8 @@ public class MainScript : MonoBehaviour
     {
         gamePaused = false;
         mainMenu.enabled = false;
+        tojam.enabled = false;
+        goat.enabled = false;
         dialogBox.SetHeader("Welcome to Root!");
         dialogBox.SetBody("Collect Garbage to make a better world!");
         audio.StopMenuMusic();
@@ -337,7 +341,8 @@ public class MainScript : MonoBehaviour
         Vector3 playerPos = player.transform.position;
         Vector3 campPos = transform.position;
         Vector3 objectivePosition = new Vector3(playerPos.x + Screen.width * 0.0035f, campPos.y, campPos.z);
-        transform.position = (campPos + objectivePosition) / 2f;
+        Vector3 diff = objectivePosition - campPos;diff.z = 0f;
+        transform.position = (campPos + diff * 0.25f) ;
     }
 
     private void FixedUpdate()

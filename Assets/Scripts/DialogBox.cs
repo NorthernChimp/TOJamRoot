@@ -23,7 +23,7 @@ public class DialogBox : MonoBehaviour
     {
         float height = Screen.height * 0.003f;
         float width = Screen.width * 0.0085f;
-        transform.localScale = new Vector3(width / 17.20f, height / 4.72f, 1f);
+        transform.localScale = new Vector3(width / 16.80f, height / 4.32f, 1f);
         transform.position = Vector3.up * Screen.height * 0.00325f;
         transform.SetParent(Camera.main.transform);
         render = GetComponent<SpriteRenderer>();
