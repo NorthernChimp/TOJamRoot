@@ -156,7 +156,7 @@ public class Player : MonoBehaviour
     {
         holdingSpace = Input.GetKey(KeyCode.Space);
         animator.SetBool("IsGrounded", grounded);
-        animator.SetBool("IsJumping", holdingSpace && grounded);
+        animator.SetBool("IsJumping", holdingSpace);
 
     }
 }
