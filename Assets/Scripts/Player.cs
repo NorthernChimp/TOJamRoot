@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     List<PlayerSettingsAffector> affectors;
     float timeSinceJump = 0f;
     bool grounded = false;
+    bool atBottom = false;
     void Start()
     {
         
@@ -22,7 +23,12 @@ public class Player : MonoBehaviour
         Vector3 diff = transform.position - contact;diff.z = 0f;diff = diff.normalized;
         if(diff == Vector3.up) 
         {
+            transform.position = contact + diff.normalized * MainScript.brickWidth * 0.55f;
             grounded = true;
+        }
+        if(diff.y < 0f)
+        {
+            if(timeSinceJump < 0f) { timeSinceJump = 0f; }
         }
     }
     void UpdatePlayerSettings(float timePassed)
@@ -63,23 +69,57 @@ public class Player : MonoBehaviour
         float ySpeed = 0f;
         if (grounded)
         {
-            if (Input.GetKey(KeyCode.Space))
+            //Physics2D.Raycast
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector3.down, MainScript.brickWidth * 0.55f, LayerMask.GetMask("collider"));
+            Debug.DrawRay(transform.position, Vector3.down * MainScript.brickWidth * 0.55f); 
+            //RaycastHit2D hit = Physics2D.Raycast(transform.position + Vector3.down * MainScript.brickWidth * 0.501f, Vector2.down, MainScript.brickWidth * 5f);
+            if (hit)
+            {
+                Debug.Log("stillgrounded");
+                Vector3 pos = transform.position;
+                pos.y = hit.point.y + MainScript.brickWidth * 0.55f;
+                transform.position = pos;
+                
+            }
+            else if(!atBottom)
             {
                 grounded = false;
-                timeSinceJump = -3f;
+                timeSinceJump = 0f;
+            }
+            if (grounded)
+            {
+                if (Input.GetKey(KeyCode.Space))
+                {
+                    grounded = false;
+                    atBottom = false;
+                    timeSinceJump = -3f;
+                }
             }
         }
         else
         {
-            Debug.Log(timeSinceJump);
-            ySpeed = MarioFunction(timeSinceJump) * MainScript.brickWidth;
-            timeSinceJump += timeSinceJump;
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector3.down, MainScript.brickWidth * 0.55f, LayerMask.GetMask("collider"));
+            //RaycastHit2D hit = Physics2D.Raycast(transform.position + Vector3.down * MainScript.brickWidth * 0.501f, Vector2.down, MainScript.brickWidth * 5f);
+            if (hit)
+            {
+                grounded = true;
+                Vector3 pos = transform.position;
+                pos.y = hit.point.y + MainScript.brickWidth * 0.55f;
+                transform.position = pos;
+            }
+            if (!grounded)
+            {
+                ySpeed = MarioFunction(timeSinceJump) * MainScript.brickWidth * 1.35f;
+                timeSinceJump += timePassed * 9f;
+                if (timeSinceJump > 5f) { timeSinceJump = 5f; }
+            }
         }
         rbody.velocity = new Vector2(xSpeed,ySpeed);
-        if (transform.position.y < Screen.height * -0.005f + MainScript.brickWidth) { Vector3 v = transform.position;v.y = Screen.height * -0.005f + MainScript.brickWidth;transform.position = v; }
+        if (transform.position.y < Screen.height * -0.005f + MainScript.brickWidth * 1.5f) { Vector3 v = transform.position;v.y = Screen.height * -0.005f + MainScript.brickWidth * 1.5f;transform.position = v; if (timeSinceJump >= 0f) { grounded = true; atBottom = true; } }
+        else if(transform.position.y > Screen.height * 0.005f - MainScript.brickWidth) { Vector3 v = transform.position;v.y = Screen.height * 0.005f - MainScript.brickWidth; transform.position = v; }
         return temp;
     }
-    float MarioFunction(float f) { return Mathf.Pow(f, 2f) * -1f + 9f; }
+    float MarioFunction(float f) { return ((f * f) * -1f) + 9f; }
     // Update is called once per frame
     void Update()
     {
@@ -91,7 +131,7 @@ public class PlayerSettings
         
         int maxHealth = 100; public int GetMaxHealth() { return maxHealth; }
         public void AddToMaxHealth(int i) { maxHealth += i; }
-        float speed = 6.5f; public float GetSpeed() { return speed; }
+        float speed = 10.20f; public float GetSpeed() { return speed; }
         public void AddSpeed(float amt) { speed += amt; }
         float maxSpeed = 125f; public float GetMaxSpeed() { return maxSpeed; }
         public void AddToMaxSpeed(float amt) { maxSpeed += amt; }

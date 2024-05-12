@@ -15,6 +15,7 @@ public class MainScript : MonoBehaviour
     List<Actor> actors = new List<Actor>();
     List<ColliderScript> colliders;
     public static MainScript instance;
+    public ParallaxEffect[] backgrounds;
     int currentSegmentXRef = 0;//the segment reference for the last tile pushed to the furthest right in the game
 
     //UI Related Stuff
@@ -51,6 +52,7 @@ public class MainScript : MonoBehaviour
     void SetupGame()
     {
         instance = this;
+        
         colliders = new List<ColliderScript>();
         SetupObjectPool();
         float screenHeight = Screen.height * 0.01f; //the height of hte entire screen in unity metres
@@ -105,6 +107,7 @@ public class MainScript : MonoBehaviour
             if (segments[0].IsPointWithinSegmentWidth(currentSegmentXRef)) { hasUpdatedXRef = true; }    //if the total width is in the first segment then there is no other segments and the currentsegmentxref is accurate
             else { currentSegmentXRef -= segments[0].GetSegmentWidth();  segments.RemoveAt(0);  }       //if the segment doesn't contain this x value then remove that segments width and remove it from the list and repeat the while loop on the next segment.
         }
+        //foreach (ParallaxEffect p in backgrounds) { p.SetupParallax(); }
         player.SetupPlayer();
     }
 
@@ -271,8 +274,12 @@ public class MainScript : MonoBehaviour
         ProcessGameEvents(updateEvents);
         CheckIfTilesHavePassedScreenLeft();
         UpdateCamera();
+        //UpdateParallaxEffects(timePassed);
     }
-
+    void UpdateParallaxEffects(float timePassed)
+    {
+        foreach(ParallaxEffect p in backgrounds) { p.UpdateParallax(timePassed); }
+    }
     void UpdateCamera()
     {
         Vector3 playerPos = player.transform.position;

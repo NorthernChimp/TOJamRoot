@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5546563483809307720}
   - component: {fileID: 250593170595738258}
   - component: {fileID: 3625634704531895443}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CircleCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
