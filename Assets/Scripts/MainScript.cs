@@ -6,6 +6,7 @@ using UnityEngine.UI;  // Required for manipulating UI elements
 public class MainScript : MonoBehaviour
 {
     // Start is called before the first frame update
+    public DialogBox dialogBox;
     public static float brickWidth;
     public static Vector3 brickScale;
     public Player player;
@@ -59,6 +60,8 @@ public class MainScript : MonoBehaviour
         instance = this;
         colliders = new List<ColliderScript>();
         SetupObjectPool();
+        dialogBox.SetHeader("Welcome to Root!");
+        dialogBox.SetBody("Collect Garbage to make a better world!");
         float screenHeight = Screen.height * 0.01f; //the height of hte entire screen in unity metres
         brickWidth = screenHeight / 24f;//have 24 bricks depending on height
         float scaleWidth = brickWidth/0.32f;
