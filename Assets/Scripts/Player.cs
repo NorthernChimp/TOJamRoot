@@ -32,12 +32,12 @@ public class Player : MonoBehaviour
         {
             transform.position = contact + diff.normalized * MainScript.brickWidth * 1.5f;
             grounded = true;
-            animator.SetBool("IsGrounded", true);
+            //animator.SetBool("IsGrounded", true);
         }
         else
         {
             transform.position = contact + diff.normalized * MainScript.brickWidth * 1.5f;
-            animator.SetBool("IsGrounded", false);
+            //animator.SetBool("IsGrounded", false);
         }
         if(diff.y < 0f)
         {
@@ -103,7 +103,7 @@ public class Player : MonoBehaviour
                     //Debug.Log("grounded is false");
                     grounded = false;
                     timeSinceJump = 3f;
-                    animator.SetBool("IsGrounded", false);
+                    //animator.SetBool("IsGrounded", false);
                 }
                 
             }
@@ -115,7 +115,8 @@ public class Player : MonoBehaviour
                     grounded = false;
                     atBottom = false;
                     timeSinceJump = -3f;
-                    animator.SetBool("IsGrounded", false);
+                    //animator.SetBool("IsGrounded", false);
+                    //animator.SetBool("IsHoldingSpace", true);
                 }
             }
         }
@@ -133,7 +134,7 @@ public class Player : MonoBehaviour
                     Vector3 pos = transform.position;
                     pos.y = hit.point.y + MainScript.brickWidth * 2f;
                     transform.position = pos;
-                    animator.SetBool("IsGrounded", true);
+                    //animator.SetBool("IsGrounded", true);
                 }
             }
             if (!grounded)
