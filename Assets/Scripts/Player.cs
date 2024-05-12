@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     float timeSinceJump = 0f;
     bool grounded = false;
     bool atBottom = false;
+    bool holdingSpace = false;
     void Start()
     {
         
@@ -25,6 +26,10 @@ public class Player : MonoBehaviour
         {
             transform.position = contact + diff.normalized * MainScript.brickWidth * 0.55f;
             grounded = true;
+        }
+        else
+        {
+            transform.position = contact + diff.normalized * MainScript.brickWidth * 0.55f;
         }
         if(diff.y < 0f)
         {
@@ -69,26 +74,33 @@ public class Player : MonoBehaviour
         float ySpeed = 0f;
         if (grounded)
         {
-            //Physics2D.Raycast
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector3.down, MainScript.brickWidth * 0.55f, LayerMask.GetMask("collider"));
-            Debug.DrawRay(transform.position, Vector3.down * MainScript.brickWidth * 0.55f); 
-            //RaycastHit2D hit = Physics2D.Raycast(transform.position + Vector3.down * MainScript.brickWidth * 0.501f, Vector2.down, MainScript.brickWidth * 5f);
-            if (hit)
+            //Debug.Log("grounded");
+            if(!atBottom)
             {
-                Debug.Log("stillgrounded");
-                Vector3 pos = transform.position;
-                pos.y = hit.point.y + MainScript.brickWidth * 0.55f;
-                transform.position = pos;
+                //Physics2D.Raycast
+                RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector3.down, MainScript.brickWidth * 0.75f, LayerMask.GetMask("collider"));
+                //Debug.DrawRay(transform.position, Vector3.down * MainScript.brickWidth * 0.55f); 
+                //RaycastHit2D hit = Physics2D.Raycast(transform.position + Vector3.down * MainScript.brickWidth * 0.501f, Vector2.down, MainScript.brickWidth * 5f);
+                if (hit)
+                {
+                    //Debug.Log(hit.collider.gameObject);
+                    Vector3 pos = transform.position;
+                    pos.y = hit.point.y + MainScript.brickWidth * 0.55f;
+                    transform.position = pos;
+
+                }
+                else
+                {
+                    //Debug.Log("grounded is false");
+                    grounded = false;
+                    timeSinceJump = 3f;
+                }
                 
-            }
-            else if(!atBottom)
-            {
-                grounded = false;
-                timeSinceJump = 0f;
             }
             if (grounded)
             {
-                if (Input.GetKey(KeyCode.Space))
+                //Debug.Log("in here at " + Time.time + " and " + holdingSpace);
+                if (holdingSpace)
                 {
                     grounded = false;
                     atBottom = false;
@@ -98,32 +110,38 @@ public class Player : MonoBehaviour
         }
         else
         {
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector3.down, MainScript.brickWidth * 0.55f, LayerMask.GetMask("collider"));
-            //RaycastHit2D hit = Physics2D.Raycast(transform.position + Vector3.down * MainScript.brickWidth * 0.501f, Vector2.down, MainScript.brickWidth * 5f);
-            if (hit)
+            //Debug.Log("not grounded");
+            if(timeSinceJump > 3f)
             {
-                grounded = true;
-                Vector3 pos = transform.position;
-                pos.y = hit.point.y + MainScript.brickWidth * 0.55f;
-                transform.position = pos;
+                RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector3.down, MainScript.brickWidth * 0.75f, LayerMask.GetMask("collider"));
+                //RaycastHit2D hit = Physics2D.Raycast(transform.position + Vector3.down * MainScript.brickWidth * 0.501f, Vector2.down, MainScript.brickWidth * 5f);
+                if (hit)
+                {
+                    //Debug.Log(hit.collider.gameObject.name);
+                    grounded = true;
+                    Vector3 pos = transform.position;
+                    pos.y = hit.point.y + MainScript.brickWidth * 0.55f;
+                    transform.position = pos;
+                }
             }
             if (!grounded)
             {
-                ySpeed = MarioFunction(timeSinceJump) * MainScript.brickWidth * 1.35f;
-                timeSinceJump += timePassed * 9f;
-                if (timeSinceJump > 5f) { timeSinceJump = 5f; }
+                //Debug.Log(timeSinceJump);
+                ySpeed = MarioFunction(timeSinceJump) * MainScript.brickWidth * 2.135f;
+                timeSinceJump += timePassed * 12f;
+                if (timeSinceJump > 6f) { timeSinceJump = 6f; }
             }
         }
         rbody.velocity = new Vector2(xSpeed,ySpeed);
-        if (transform.position.y < Screen.height * -0.005f + MainScript.brickWidth * 1.5f) { Vector3 v = transform.position;v.y = Screen.height * -0.005f + MainScript.brickWidth * 1.5f;transform.position = v; if (timeSinceJump >= 0f) { grounded = true; atBottom = true; } }
+        if (transform.position.y < Screen.height * -0.005f + MainScript.brickWidth * 1.75f) { Vector3 v = transform.position;v.y = Screen.height * -0.005f + MainScript.brickWidth * 1.75f;transform.position = v; if (timeSinceJump >= 3f) { grounded = true; atBottom = true; } }
         else if(transform.position.y > Screen.height * 0.005f - MainScript.brickWidth) { Vector3 v = transform.position;v.y = Screen.height * 0.005f - MainScript.brickWidth; transform.position = v; }
         return temp;
     }
-    float MarioFunction(float f) { return ((f * f) * -1f) + 9f; }
+    float MarioFunction(float f) { return (((f ) * (f )) * -1f) + 9f; }
     // Update is called once per frame
     void Update()
     {
-        
+        holdingSpace = Input.GetKey(KeyCode.Space);
     }
 }
 public class PlayerSettings

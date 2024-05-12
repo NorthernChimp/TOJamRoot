@@ -16,13 +16,15 @@ public class MainScript : MonoBehaviour
     List<ColliderScript> colliders;
     public static MainScript instance;
     public ParallaxEffect[] backgrounds;
+    public AudioManager audio;
     int currentSegmentXRef = 0;//the segment reference for the last tile pushed to the furthest right in the game
 
     //UI Related Stuff
     public Slider progressBar;  // Reference to the progress bar slider
     private int totalCollectibles = 10;  // Set this to your total number of collectible items
     private int collectedItems = 0;
-
+    public static bool playMusic = true;
+    public static bool playSound = true;
     void Start()
     {
         SetupGame();
@@ -51,8 +53,10 @@ public class MainScript : MonoBehaviour
     }
     void SetupGame()
     {
+        if(PlayerPrefs.GetInt("PlayMusic") == 1) { playMusic = false; }
+        if(PlayerPrefs.GetInt("PlaySound") == 1) { playSound = false; }
+        if (playMusic) { audio.PlayMusic(); }
         instance = this;
-        
         colliders = new List<ColliderScript>();
         SetupObjectPool();
         float screenHeight = Screen.height * 0.01f; //the height of hte entire screen in unity metres
@@ -185,11 +189,15 @@ public class MainScript : MonoBehaviour
                 case GameEventType.createActor:CreateActor(e); break;
                 case GameEventType.createCollider:CreateCollider(e);break;
                 case GameEventType.removeActor:RemoveActor(e);break;
+                case GameEventType.playSound:PlaySound(e);break;
             }
             events.RemoveAt(0);
         }
     }
-
+    void PlaySound(GameEvent e)
+    {
+        audio.Play(e.GetPrefabName());
+    }
     void RemoveActor(GameEvent e)
     {
         Actor a = e.GetActor();

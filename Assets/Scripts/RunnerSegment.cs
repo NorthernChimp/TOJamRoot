@@ -77,8 +77,16 @@ public class RunnerSegment
         segmentEvents = new List<GameEvent>(); //these are the game events that come with the segment. Mainly just "create actor" events like creating scenery like the garbage can or a bad guy, or a trampoline, anything really
 
         //I created a function for building a house in the segment
-        CreateHouse(new Vector2Int((int)(width / 2), 1), GetRandomIntBetween(5,11), GetRandomIntBetween(4,8));
-
+        Vector2Int houseOrigin = new Vector2Int((int)(width / 2), 1);
+        int houseWidth = GetRandomIntBetween(5, 11);
+        int houseHeight = GetRandomIntBetween(4, 8);
+        CreateHouse(houseOrigin, houseWidth, houseHeight);
+        if(houseHeight > 4)
+        {
+            Vector2Int rightAndAboveOrigin = new Vector2Int(houseOrigin.x - 8, houseOrigin.y + 3);
+            int widthFree = GetRandomIntBetween(2, 5);
+            CreateFreeStandingWall(rightAndAboveOrigin, widthFree);
+        }
         
         if (Random.value > 0.5f) //Random.value is just a rnadom value between 0 and 1, this is basically saying if that number is higher than 0.5 (50%) do this thing
         {

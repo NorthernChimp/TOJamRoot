@@ -38,4 +38,4 @@ public class GameEvent
         ty = pe;
     }
 }
-public enum GameEventType { none,createActor,createEffect,removeActor,createCollider}
+public enum GameEventType { none,createActor,createEffect,removeActor,createCollider,playSound}
