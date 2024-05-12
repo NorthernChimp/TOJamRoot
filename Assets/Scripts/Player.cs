@@ -15,29 +15,22 @@ public class Player : MonoBehaviour
     bool grounded = false;
     bool atBottom = false;
     bool holdingSpace = false;
-
-    Animator animator;
-
     void Start()
     {
-        rbody = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();  // Get the Animator component
+        
     }
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Vector3 contact = collision.GetContact(0).point;
         Vector3 diff = transform.position - contact;diff.z = 0f;diff = diff.normalized;
         if(diff == Vector3.up) 
         {
-            transform.position = contact + diff.normalized * MainScript.brickWidth * 1.5f;
+            transform.position = contact + diff.normalized * MainScript.brickWidth * 3.5f;
             grounded = true;
-            //animator.SetBool("IsGrounded", true);
         }
         else
         {
-            transform.position = contact + diff.normalized * MainScript.brickWidth * 1.5f;
-            //animator.SetBool("IsGrounded", false);
+            transform.position = contact + diff.normalized * MainScript.brickWidth * 3.5f;
         }
         if(diff.y < 0f)
         {
@@ -103,7 +96,6 @@ public class Player : MonoBehaviour
                     //Debug.Log("grounded is false");
                     grounded = false;
                     timeSinceJump = 3f;
-                    //animator.SetBool("IsGrounded", false);
                 }
                 
             }
@@ -115,8 +107,6 @@ public class Player : MonoBehaviour
                     grounded = false;
                     atBottom = false;
                     timeSinceJump = -3f;
-                    //animator.SetBool("IsGrounded", false);
-                    //animator.SetBool("IsHoldingSpace", true);
                 }
             }
         }
@@ -134,7 +124,6 @@ public class Player : MonoBehaviour
                     Vector3 pos = transform.position;
                     pos.y = hit.point.y + MainScript.brickWidth * 2f;
                     transform.position = pos;
-                    //animator.SetBool("IsGrounded", true);
                 }
             }
             if (!grounded)
@@ -154,10 +143,8 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        holdingSpace = Input.GetKey(KeyCode.Space);
-        animator.SetBool("IsGrounded", grounded);
-        animator.SetBool("IsJumping", holdingSpace);
-
+        //holdingSpace = Input.GetKey(KeyCode.Space);
+        holdingSpace = Input.touchCount > 0;
     }
 }
 public class PlayerSettings

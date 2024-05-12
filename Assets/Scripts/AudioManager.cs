@@ -7,6 +7,7 @@ public class AudioManager : MonoBehaviour
 {
     public AudioSource effects;
     public AudioSource music;
+    public AudioSource menuMusic;
     public Sound[] sounds;
     private void Awake()
     {
@@ -27,6 +28,14 @@ public class AudioManager : MonoBehaviour
     public void StopMusic()
     {
         music.Stop();
+    }
+    public void PlayMenuMusic()
+    {
+        menuMusic.Play();
+    }
+    public void StopMenuMusic()
+    {
+        menuMusic.Stop();
     }
     public void Play(string soundName) 
     {

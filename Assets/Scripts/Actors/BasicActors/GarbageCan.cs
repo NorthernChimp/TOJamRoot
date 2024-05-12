@@ -8,6 +8,7 @@ public class GarbageCan : MonoBehaviour,Actor
     public List<GameEvent> SetupActor()
     {
         List<GameEvent> temp = new List<GameEvent>();
+        hasBeenCollected = false;
         transform.localScale = MainScript.brickScale;
         return temp;
     }

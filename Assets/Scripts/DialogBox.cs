@@ -6,8 +6,8 @@ using TMPro;
 public class DialogBox : MonoBehaviour
 {
     // Start is called before the first frame update
-    string header; public void SetHeader(string newHeader) { header = newHeader; headerText.text = header; }
-    string body; public void SetBody(string newBody) { body = newBody; charactersRevealed = 0; bodyText.text = string.Empty; }
+    string header = ""; public void SetHeader(string newHeader) { header = newHeader; headerText.text = header; }
+    string body = ""; public void SetBody(string newBody) { body = newBody; charactersRevealed = 0; bodyText.text = string.Empty; SetVisible(true); }
     int charactersRevealed = 0;
     public TextMeshProUGUI headerText;
     public TextMeshProUGUI bodyText;
@@ -18,7 +18,6 @@ public class DialogBox : MonoBehaviour
     void Start()
     {
         SetupDialogBox();
-        SetBody("lorum ipsum dobodydoadadsfffn ffffffffffffffffffffffffff ffffffffffffffffffffffffffffff ffffffffffffasd");
     }
     void SetupDialogBox()
     {
@@ -28,12 +27,13 @@ public class DialogBox : MonoBehaviour
         transform.position = Vector3.up * Screen.height * 0.00325f;
         transform.SetParent(Camera.main.transform);
         render = GetComponent<SpriteRenderer>();
-        headerText.fontSize = Screen.height / 15f;
+        headerText.fontSize = Screen.height / 18f;
         bodyText.fontSize = Screen.height / 20f;
         bodyText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Screen.width * 0.7f);
-        headerText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Screen.width * 0.7f);
+        headerText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Screen.width * 0.85f);
         bodyText.rectTransform.position = Vector3.up * Screen.height * 0.775f + Vector3.right * Screen.width * 0.5f;
         headerText.rectTransform.position = Vector3.up * Screen.height * 0.925f + Vector3.right * Screen.width * 0.5f;
+        SetVisible(false);
         //bodyText.rectTransform.position = Vector3.up * Screen.height * 0.325f;
         //Vector3.up * Screen.height * 0.325f;headerText.rectTransform.position = Vector3.up * Screen.height * 0.375f;
         //render.enabled = false;

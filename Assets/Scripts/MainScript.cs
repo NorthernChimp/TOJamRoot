@@ -6,8 +6,13 @@ using UnityEngine.UI;  // Required for manipulating UI elements
 public class MainScript : MonoBehaviour
 {
     // Start is called before the first frame update
+    public RectTransform handle;
     public DialogBox dialogBox;
     public static float brickWidth;
+    int dialogBoxRef = 0;
+    public string[] headerText;
+    public SpriteRenderer mainMenu;
+    public string[] bodyText;
     public static Vector3 brickScale;
     public Player player;
     GameObject tile;
@@ -18,6 +23,7 @@ public class MainScript : MonoBehaviour
     public static MainScript instance;
     public ParallaxEffect[] backgrounds;
     public AudioManager audio;
+    bool gamePaused = true;
     int currentSegmentXRef = 0;//the segment reference for the last tile pushed to the furthest right in the game
 
     //UI Related Stuff
@@ -29,6 +35,7 @@ public class MainScript : MonoBehaviour
     void Start()
     {
         SetupGame();
+        
     }
     void SetupObjectPool()          //the object pool, which is a completely seperate script is used to avoid instantiating which wastes alot of processing power.
     {                               //basically, rather than creating a game object we create alot of them before we need any and deactivate them.
@@ -52,16 +59,30 @@ public class MainScript : MonoBehaviour
             objectsToPurge.RemoveAt(0);
         }
     }
+    void StartGame()
+    {
+        gamePaused = false;
+        mainMenu.enabled = false;
+        dialogBox.SetHeader("Welcome to Root!");
+        dialogBox.SetBody("Collect Garbage to make a better world!");
+        audio.StopMenuMusic();
+        audio.PlayMusic();
+    }
     void SetupGame()
     {
+        Screen.orientation = ScreenOrientation.LandscapeLeft;
+        RectTransform rect = progressBar.GetComponent<RectTransform>();
+        rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,(Screen.height * 0.15f));
+        rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,(Screen.height * 0.8f));
+        handle.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,Screen.height * 0.15f);
+        float menuHeight = Screen.height * 0.008f;
+        mainMenu.transform.localScale = new Vector3(menuHeight / 9.82f, menuHeight / 9.82f, 1f);
         if(PlayerPrefs.GetInt("PlayMusic") == 1) { playMusic = false; }
         if(PlayerPrefs.GetInt("PlaySound") == 1) { playSound = false; }
-        if (playMusic) { audio.PlayMusic(); }
+        if (playMusic) { audio.PlayMenuMusic(); }
         instance = this;
         colliders = new List<ColliderScript>();
         SetupObjectPool();
-        dialogBox.SetHeader("Welcome to Root!");
-        dialogBox.SetBody("Collect Garbage to make a better world!");
         float screenHeight = Screen.height * 0.01f; //the height of hte entire screen in unity metres
         brickWidth = screenHeight / 24f;//have 24 bricks depending on height
         float scaleWidth = brickWidth/0.32f;
@@ -141,6 +162,15 @@ public class MainScript : MonoBehaviour
         {
             //progressBar.value = (float)collectedItems / totalCollectibles;
             progressBar.value = collectedItems;
+            if(progressBar.value == progressBar.maxValue)
+            {
+                progressBar.value = 0;
+                dialogBox.SetBody(bodyText[dialogBoxRef]);
+                dialogBox.SetHeader(headerText[dialogBoxRef]);
+                dialogBoxRef++;
+                if(dialogBoxRef == bodyText.Length) { dialogBoxRef = 0; }
+                collectedItems = 0;
+            }
         }
     }
 
@@ -274,17 +304,28 @@ public class MainScript : MonoBehaviour
 
     void UpdateGame(float timePassed)
     {
-        timePassed *= GetTimeFactor();
-        List<GameEvent> updateEvents = new List<GameEvent>();
-        for(int i = 0; i < actors.Count; i++)
+        if (!gamePaused)
         {
-            Actor a = actors[i];
-            updateEvents.AddRange(a.UpdateActor(timePassed));
+            timePassed *= GetTimeFactor();
+            List<GameEvent> updateEvents = new List<GameEvent>();
+            for (int i = 0; i < actors.Count; i++)
+            {
+                Actor a = actors[i];
+                updateEvents.AddRange(a.UpdateActor(timePassed));
+            }
+            updateEvents.AddRange(player.UpdatePlayer(timePassed));
+            ProcessGameEvents(updateEvents);
+            CheckIfTilesHavePassedScreenLeft();
+            UpdateCamera();
         }
-        updateEvents.AddRange(player.UpdatePlayer(timePassed));
-        ProcessGameEvents(updateEvents);
-        CheckIfTilesHavePassedScreenLeft();
-        UpdateCamera();
+        else
+        {
+            if(Time.time > 0.5f && Input.touchCount > 0)
+            {
+                StartGame();
+            }
+        }
+        
         //UpdateParallaxEffects(timePassed);
     }
     void UpdateParallaxEffects(float timePassed)
@@ -310,6 +351,6 @@ public class MainScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Escape)) { Application.Quit(); }
     }
 }
