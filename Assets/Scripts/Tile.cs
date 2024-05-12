@@ -15,7 +15,7 @@ public class Tile : MonoBehaviour
     {
         typeOfTile = ty;
         render = GetComponent<SpriteRenderer>();
-        Sprite s = SpriteLibrary.instance.GetSpriteFromKey("ground");
+        Sprite s = SpriteLibrary.instance.GetSpriteFromKey("FLOOR_TILE-32");
         switch (ty)
         {
             case TileType.ground: render.sortingOrder = (0); break;//ground is default
