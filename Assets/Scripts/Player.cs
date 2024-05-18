@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
     bool grounded = false;
     bool atBottom = false;
     bool holdingSpace = false;
+    Animator anim;
     void Start()
     {
         
@@ -25,16 +26,29 @@ public class Player : MonoBehaviour
         Vector3 diff = transform.position - contact;diff.z = 0f;diff = diff.normalized;
         if(diff == Vector3.up) 
         {
-            transform.position = contact + diff.normalized * MainScript.brickWidth * 3.5f;
+            transform.position = contact + diff.normalized * MainScript.brickWidth * 2.0f;
             grounded = true;
+            anim.Play("Player_Run");
         }
         else
         {
-            transform.position = contact + diff.normalized * MainScript.brickWidth * 3.5f;
+            transform.position = contact + diff.normalized * MainScript.brickWidth * 3.5f + Vector3.up * MainScript.brickWidth * 0.5f;
+            grounded = false;
+            atBottom = false;
+            if (diff.normalized.y > 0.75f && timeSinceJump > 3f)
+            {
+                
+                timeSinceJump = 3f;
+                anim.Play("Player_JumpFall");
+                
+            }
+            else
+            {
+            }
         }
         if(diff.y < 0f)
         {
-            if(timeSinceJump < 0f) { timeSinceJump = 0f; }
+            if(timeSinceJump < 3f) { timeSinceJump = 3f; anim.Play("Player_JumpFall"); }
         }
     }
     void UpdatePlayerSettings(float timePassed)
@@ -61,11 +75,13 @@ public class Player : MonoBehaviour
     public void SetupPlayer()
     {
         instance = transform;
+        anim = GetComponent<Animator>();
         affectors = new List<PlayerSettingsAffector>();
         transform.localScale = MainScript.brickScale;
         rbody = GetComponent<Rigidbody2D>();
         currentSettings = new PlayerSettings();
         defaultSettings = new PlayerSettings();
+        anim.Play("Player_Run");
     }
     public List<GameEvent> UpdatePlayer(float timePassed)
     {
@@ -96,6 +112,7 @@ public class Player : MonoBehaviour
                     //Debug.Log("grounded is false");
                     grounded = false;
                     timeSinceJump = 3f;
+                    anim.Play("Player_JumpFall");
                 }
                 
             }
@@ -107,6 +124,7 @@ public class Player : MonoBehaviour
                     grounded = false;
                     atBottom = false;
                     timeSinceJump = -3f;
+                    anim.Play("Player_JumpStart");
                 }
             }
         }
@@ -120,6 +138,7 @@ public class Player : MonoBehaviour
                 if (hit)
                 {
                     //Debug.Log(hit.collider.gameObject.name);
+                    anim.Play("Player_Run");
                     grounded = true;
                     Vector3 pos = transform.position;
                     pos.y = hit.point.y + MainScript.brickWidth * 2f;
@@ -135,8 +154,22 @@ public class Player : MonoBehaviour
             }
         }
         rbody.velocity = new Vector2(xSpeed,ySpeed);
-        if (transform.position.y < Screen.height * -0.005f + MainScript.brickWidth * 3.25f) { Vector3 v = transform.position;v.y = Screen.height * -0.005f + MainScript.brickWidth * 3.25f;transform.position = v; if (timeSinceJump >= 3f) { grounded = true; atBottom = true; } }
-        else if(transform.position.y > Screen.height * 0.005f - MainScript.brickWidth) { Vector3 v = transform.position;v.y = Screen.height * 0.005f - MainScript.brickWidth; transform.position = v; }
+        if (transform.position.y < Screen.height * -0.005f + MainScript.brickWidth * 3.25f) 
+        { 
+            Vector3 v = transform.position;v.y = Screen.height * -0.005f + MainScript.brickWidth * 3.25f;
+            transform.position = v;
+            if (timeSinceJump >= 3f) 
+            {
+                grounded = true; 
+                atBottom = true; 
+                anim.Play("Player_Run"); 
+            } 
+        }
+        else if(transform.position.y > Screen.height * 0.005f - MainScript.brickWidth) 
+        { 
+            Vector3 v = transform.position;v.y = Screen.height * 0.005f - MainScript.brickWidth; 
+            transform.position = v; 
+        }
         return temp;
     }
     float MarioFunction(float f) { return (((f ) * (f )) * -1f) + 9f; }

@@ -34,7 +34,9 @@ public class RunnerSegment
         Vector3 lowerLeftPos = origin + ((float)lowerLeftCorner.x * Vector3.right * MainScript.brickWidth) + ((float)lowerLeftCorner.y * Vector3.up * MainScript.brickWidth);
         float completeWidth = (float)width * MainScript.brickWidth;
         Vector3 middleOfRoof = lowerLeftPos + (Vector3.up * (float)(height - 1) * MainScript.brickWidth) + (Vector3.right * completeWidth * 0.5f) + (Vector3.left * 0.5f * MainScript.brickWidth);
+        Vector3 topMiddleOfhouse = GetPosFromCoordinate(new Vector2Int(lowerLeftCorner.x + (int)(width * Random.value), lowerLeftCorner.y + height)) + Vector3.up * MainScript.brickWidth * 1.5f;//get the current tile coordinates
         segmentEvents.Add(GameEvent.GetCreateColliderEvent(middleOfRoof, completeWidth, 1f * MainScript.brickWidth, true));
+        if (Random.value > 0.5f) { segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan", topMiddleOfhouse)); }
     }
     public RunnerSegment SetupSegment(int width,Vector3 ori)
     {
@@ -77,17 +79,54 @@ public class RunnerSegment
         segmentEvents = new List<GameEvent>(); //these are the game events that come with the segment. Mainly just "create actor" events like creating scenery like the garbage can or a bad guy, or a trampoline, anything really
 
         //I created a function for building a house in the segment
-        Vector2Int houseOrigin = new Vector2Int((int)(width / 2), 1);
+        Vector2Int houseOrigin = new Vector2Int((int)(width / 3), 1);
         int houseWidth = GetRandomIntBetween(5, 11);
-        int houseHeight = GetRandomIntBetween(4, 8);
-        CreateHouse(houseOrigin, houseWidth, houseHeight);
+        int houseHeight = GetRandomIntBetween(5, 8);
+        CreateHouse(houseOrigin, houseWidth,houseHeight);
         if(houseHeight > 4)
         {
-            Vector2Int rightAndAboveOrigin = new Vector2Int(houseOrigin.x - 8, houseOrigin.y + 4);
-            int widthFree = GetRandomIntBetween(2, 5);
-            CreateFreeStandingWall(rightAndAboveOrigin, widthFree);
+            if(Random.value < 0.25f)
+            {
+                Vector2Int rightAndAboveOrigin = new Vector2Int(houseOrigin.x - 8, houseOrigin.y + 4);
+                int widthFree = GetRandomIntBetween(2, 5);
+                CreateFreeStandingWall(rightAndAboveOrigin, widthFree);
+            }
+            else
+            {
+                CreateFreeStandingWall(new Vector2Int(0, 1), 6);
+                CreateFreeStandingWall(new Vector2Int(5, 2), GetRandomIntBetween(3,5));
+                if(houseHeight > 6)
+                {
+                    CreateFreeStandingWall(new Vector2Int(houseOrigin.x - 2, houseOrigin.y + houseHeight - 2), 2);
+                }
+            }
         }
-        
+        else
+        {
+            CreateFreeStandingWall(new Vector2Int(0, 1), 3);
+        }
+        if(Random.value < 0.25f)
+        {
+            Vector2Int topRight = new Vector2Int(houseOrigin.x + houseWidth + 4, houseOrigin.y + houseHeight + 0);
+            CreateFreeStandingWall(topRight, 2);
+            Vector3 pos = GetPosFromCoordinate(topRight) + Vector3.right * MainScript.brickWidth * 0.5f + Vector3.up * MainScript.brickWidth * 2f;
+            segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan", pos));
+            if(Random.value < 0.25f)
+            {
+                topRight = new Vector2Int(houseOrigin.x + houseWidth + 7, houseOrigin.y + houseHeight + 2);
+                CreateFreeStandingWall(topRight, 3);
+                pos = GetPosFromCoordinate(topRight) + Vector3.right * MainScript.brickWidth * 0.5f + Vector3.up * MainScript.brickWidth * 2f;
+                segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan", pos));
+            }
+        }
+        else
+        {
+            if(Random.value > 0.5f)
+            {
+                Vector2Int topRight = new Vector2Int(houseOrigin.x + houseWidth + 3, houseOrigin.y + 1);
+                CreateFreeStandingWall(topRight, GetRandomIntBetween(2, 4));
+            }
+        }
         if (Random.value > 0.5f) //Random.value is just a rnadom value between 0 and 1, this is basically saying if that number is higher than 0.5 (50%) do this thing
         {
             int randoInt = GetRandomIntBetween(13, 16);             //takes a random x value
@@ -95,16 +134,23 @@ public class RunnerSegment
             Vector3 randomPos = origin + Vector3.right * MainScript.brickWidth * randoInt + Vector3.up * MainScript.brickWidth * 2f; //uses the random x value to place the object down in the scene
             //segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan", randomPos));                                                 //creates the game event to create that actor and adds it to the segment events
         }
-        CreateFreeStandingWall(new Vector2Int(GetRandomIntBetween(15, 16), GetRandomIntBetween(15, 20)), 3);
+
+        //CreateFreeStandingWall(new Vector2Int(GetRandomIntBetween(15, 16), GetRandomIntBetween(15, 20)), 3);
         //also I'll make some Vector3 values in here shorthand for you guys. this is a vector that is always in the lower left corner of the house for example
-        int randomInt = (int)Random.Range(4f, 12f);     //this random number is the x value of the origin where we're going to make a house
+        int randomInt = (int)Random.Range(2f, 4f);     //this random number is the x value of the origin where we're going to make a house
         Vector3 posInFrontOfHouse = origin + Vector3.right * MainScript.brickWidth * randomInt + Vector3.up * MainScript.brickWidth * 2f;
-        segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan",posInFrontOfHouse));  //this is the game event that will create a garbage can at that point. Note its added to segment events otherwise the even will not be executed
+        //segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan",posInFrontOfHouse));  //this is the game event that will create a garbage can at that point. Note its added to segment events otherwise the even will not be executed
         if(Random.value > 0.5f)
         {
             segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan", posInFrontOfHouse + Vector3.right * houseWidth * 1f * MainScript.brickWidth));  //this is the game event that will create a garbage can at that point. Note its added to segment events otherwise the even will not be executed
         }
-        
+        if (Random.value > 0.65f)
+        {
+            houseOrigin = new Vector2Int((int)((width * 2) / 3), 1);
+            houseWidth = GetRandomIntBetween(5, 8);
+            houseHeight = GetRandomIntBetween(4, 5);
+            CreateHouse(houseOrigin, houseWidth, houseHeight);
+        }
         //segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan",posInFrontOfHouse));  //this is the game event that will create a garbage can at that point. Note its added to segment events otherwise the even will not be executed
         //segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan",posInFrontOfHouse));  //this is the game event that will create a garbage can at that point. Note its added to segment events otherwise the even will not be executed
         //segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan",posInFrontOfHouse));  //this is the game event that will create a garbage can at that point. Note its added to segment events otherwise the even will not be executed
@@ -112,6 +158,7 @@ public class RunnerSegment
         //segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan",posInFrontOfHouse));  //this is the game event that will create a garbage can at that point. Note its added to segment events otherwise the even will not be executed
         return this;
     }
+    Vector3 GetPosFromCoordinate(Vector2Int v){return origin + Vector3.right * MainScript.brickWidth * (float)v.x + Vector3.up * MainScript.brickWidth * (float)v.y;}
     void CreateFreeStandingWall(Vector2Int leftcoord,int width)
     {
         for(int i = 0; i < width; i++)
