@@ -103,7 +103,7 @@ public class MainScript : MonoBehaviour
         while(totalSegmentWidth <= totalBackgroundWidth)  //you have to fill up the first screen with randomized segments
         {
             int randomWidth = (int)Random.Range(50f, 60f);//randomly select a width for the new segment (must be between 30 and 120, this can change later)
-            segments.Add(new RunnerSegment().SetupSegment(randomWidth, origin + Vector3.right * totalSegmentWidth * brickWidth)); //setup the runner segment after creating it
+            segments.Add(new RunnerSegment().SetupSegment(randomWidth, origin + Vector3.right * totalSegmentWidth * brickWidth,true)); //setup the runner segment after creating it
             totalSegmentWidth += segments[segments.Count - 1].GetSegmentWidth();  //update the total segment width of all the segments
         }
         foreach (RunnerSegment r in segments) { ProcessGameEvents(r.GetSegmentEvents()); } //go through the list of segments and get all the relevant game events they require
@@ -209,9 +209,9 @@ public class MainScript : MonoBehaviour
         return til;
     }
 
-    void CreateNextSegment(Vector3 newOrigin)
+    void CreateNextSegment(Vector3 newOrigin,bool introSegment)
     {
-        segments.Add(new RunnerSegment().SetupSegment((int)Random.Range(50f, 60f), newOrigin));
+        segments.Add(new RunnerSegment().SetupSegment((int)Random.Range(50f, 60f), newOrigin,introSegment));
         currentSegmentXRef = 0;
         //currentSegmentXRef -= segments[0].GetSegmentWidth(); 
         segments.RemoveAt(0);
@@ -290,7 +290,7 @@ public class MainScript : MonoBehaviour
             {
                 Vector3 newOrigin = tileLayout[0][0].transform.position + Vector3.right * brickWidth * tileLayout[0].Count;
                 Tile t = tileLayout[0][0];
-                CreateNextSegment(newOrigin);
+                CreateNextSegment(newOrigin,false);
                 currentSegmentXRef = 0;
             }                      
             for(int i =0; i < 24; i++)
