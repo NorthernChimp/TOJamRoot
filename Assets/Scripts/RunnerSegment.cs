@@ -94,7 +94,7 @@ public class RunnerSegment
             else
             {
                 CreateFreeStandingWall(new Vector2Int(0, 1), 6);
-                CreateFreeStandingWall(new Vector2Int(5, 2), GetRandomIntBetween(3,5));
+                CreateFreeStandingWall(new Vector2Int(3, 2), GetRandomIntBetween(3,5));
                 if(houseHeight > 6)
                 {
                     CreateFreeStandingWall(new Vector2Int(houseOrigin.x - 2, houseOrigin.y + houseHeight - 2), 2);
@@ -148,7 +148,7 @@ public class RunnerSegment
         {
             houseOrigin = new Vector2Int((int)((width * 2) / 3), 1);
             houseWidth = GetRandomIntBetween(5, 8);
-            houseHeight = GetRandomIntBetween(4, 5);
+            houseHeight = GetRandomIntBetween(5, 6);
             CreateHouse(houseOrigin, houseWidth, houseHeight);
         }
         //segmentEvents.Add(GameEvent.CreateActorEvent("GarbageCan",posInFrontOfHouse));  //this is the game event that will create a garbage can at that point. Note its added to segment events otherwise the even will not be executed

@@ -20,6 +20,10 @@ public class Player : MonoBehaviour
     {
         
     }
+    public void AddSettingsAffector(PlayerSettingsAffector aff)
+    {
+        affectors.Add(aff);
+    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Vector3 contact = collision.GetContact(0).point;

@@ -6,6 +6,7 @@ using UnityEngine.UI;  // Required for manipulating UI elements
 public class MainScript : MonoBehaviour
 {
     // Start is called before the first frame update
+    public Transform background;
     public RectTransform handle;
     public DialogBox dialogBox;
     public static float brickWidth;
@@ -75,6 +76,7 @@ public class MainScript : MonoBehaviour
     void SetupGame()
     {
         Screen.orientation = ScreenOrientation.LandscapeLeft;
+        background.transform.localScale = new Vector3((Screen.width * 0.01f) / 5.76f, (Screen.height * 0.01f) / 3.24f, 1f);
         RectTransform rect = progressBar.GetComponent<RectTransform>();
         rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,(Screen.height * 0.15f));
         rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,(Screen.height * 0.8f));
@@ -100,7 +102,7 @@ public class MainScript : MonoBehaviour
         int totalSegmentWidth = 0;
         while(totalSegmentWidth <= totalBackgroundWidth)  //you have to fill up the first screen with randomized segments
         {
-            int randomWidth = (int)Random.Range(20f, 50f);//randomly select a width for the new segment (must be between 30 and 120, this can change later)
+            int randomWidth = (int)Random.Range(50f, 60f);//randomly select a width for the new segment (must be between 30 and 120, this can change later)
             segments.Add(new RunnerSegment().SetupSegment(randomWidth, origin + Vector3.right * totalSegmentWidth * brickWidth)); //setup the runner segment after creating it
             totalSegmentWidth += segments[segments.Count - 1].GetSegmentWidth();  //update the total segment width of all the segments
         }
@@ -209,7 +211,7 @@ public class MainScript : MonoBehaviour
 
     void CreateNextSegment(Vector3 newOrigin)
     {
-        segments.Add(new RunnerSegment().SetupSegment((int)Random.Range(50f, 50f), newOrigin));
+        segments.Add(new RunnerSegment().SetupSegment((int)Random.Range(50f, 60f), newOrigin));
         currentSegmentXRef = 0;
         //currentSegmentXRef -= segments[0].GetSegmentWidth(); 
         segments.RemoveAt(0);
@@ -227,10 +229,12 @@ public class MainScript : MonoBehaviour
                 case GameEventType.createCollider:CreateCollider(e);break;
                 case GameEventType.removeActor:RemoveActor(e);break;
                 case GameEventType.playSound:PlaySound(e);break;
+                case GameEventType.applyStatusAffector:ApplySettingsAffector(e);break;
             }
             events.RemoveAt(0);
         }
     }
+    void ApplySettingsAffector(GameEvent e){player.AddSettingsAffector(e.GetAffector());    }
     void PlaySound(GameEvent e)
     {
         audio.Play(e.GetPrefabName());

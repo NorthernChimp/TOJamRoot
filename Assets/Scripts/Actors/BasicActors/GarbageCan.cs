@@ -21,10 +21,11 @@ public class GarbageCan : MonoBehaviour,Actor
     {
         List<GameEvent> temp = new List<GameEvent>();
         Vector3 diff = Player.instance.position - transform.position;diff.z = 0f;
-        if(diff.magnitude < MainScript.brickWidth * 3.5f && !hasBeenCollected)
+        if(diff.magnitude < MainScript.brickWidth * 3.15f && !hasBeenCollected)
         {
             hasBeenCollected = true;
             MainScript.instance.ItemCollected();
+            temp.Add(GameEvent.GetAffectorEvent(new PlayerSettingsAffector(3.420f, PlayerSettingsAffectorType.addToSpeed, 4f)));
             temp.Add(GameEvent.GetRemoveActorEvent(this));
         }
         if(MainScript.IsPointLeftOfCamera(transform.position + Vector3.right * Screen.width * 0.001f))

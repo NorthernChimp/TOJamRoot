@@ -13,12 +13,20 @@ public class GameEvent
     bool b; public bool GetBool() { return b; }
     string prefabName; public string GetPrefabName() { return prefabName; }
     Actor a; public Actor GetActor() { return a; }
+
+    PlayerSettingsAffector affector;public PlayerSettingsAffector GetAffector() { return affector; }
     Vector3 pos; public Vector3 GetPos() { return pos; }
     GameEvent(GameEventType pe,int amou)
     {
         ty = pe;
         amt = amou;
     }
+    GameEvent(GameEventType pe,PlayerSettingsAffector aff)
+    {
+        ty = pe;
+        affector = aff;
+    }
+    public static GameEvent GetAffectorEvent(PlayerSettingsAffector a){return new GameEvent(GameEventType.applyStatusAffector, a);}
     public GameEvent(GameEventType pe, Actor act) { a = act;ty = pe; }
     public static GameEvent GetRemoveActorEvent(Actor act) { return new GameEvent(GameEventType.removeActor, act); }
     public static GameEvent GetCreateColliderEvent(Vector3 posit,float width,float height,bool boo) { return new GameEvent(GameEventType.createCollider, width, height, boo,posit); }
@@ -38,4 +46,4 @@ public class GameEvent
         ty = pe;
     }
 }
-public enum GameEventType { none,createActor,createEffect,removeActor,createCollider,playSound}
+public enum GameEventType { none,createActor,createEffect,removeActor,createCollider,playSound,applyStatusAffector}

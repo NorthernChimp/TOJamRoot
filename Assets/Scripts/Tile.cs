@@ -16,10 +16,11 @@ public class Tile : MonoBehaviour
         typeOfTile = ty;
         render = GetComponent<SpriteRenderer>();
         Sprite s = SpriteLibrary.instance.GetSpriteFromKey("FLOOR_TILE-32");
+        render.enabled = true;
         switch (ty)
         {
             case TileType.ground: render.sortingOrder = (0); break;//ground is default
-            case TileType.skyBackground:s = SpriteLibrary.instance.GetSpriteFromKey("SKY-L1");render.sortingOrder = (-5) ;break;
+            case TileType.skyBackground:render.enabled = false ;break;
             case TileType.house:s = SpriteLibrary.instance.GetSpriteFromKey("house"); render.sortingOrder = (0); break;
             case TileType.roof:s = SpriteLibrary.instance.GetSpriteFromKey("roof"); render.sortingOrder = (0); break;
         }
